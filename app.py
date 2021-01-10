@@ -82,9 +82,13 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    line_bot_api.reply_message(
-        event.reply_token,
-        TextSendMessage(text=event.message.text))
+    if(event.message.text[0]=="#"):
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="อย่าพึงทัก ยังทำไม่เสร็จ"))
+        # line_bot_api.reply_message(
+        #     event.reply_token,
+        #     TextSendMessage(text=event.message.text))
 
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
