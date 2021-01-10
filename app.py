@@ -84,13 +84,18 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if (event.message.text[0]=="#price"):
+    if (event.message.text=="#price"):
         response = requests.get("http://api.open-notify.org/this-api-doesnt-exist")
         interested = ['THB_BTC',"THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
-        response = "Current Price :D"
+        response_message = "Current Price :D"
         for i in interested:
             coin_data = response.json()[i]
-            response = response +"/n"+i+" lastest price:"+ coin_data["last"]+" change:"+coin_data["percentChange"]
+            response_message = response_message +"/n"+i+" lastest price:"+ coin_data["last"]+" change:"+coin_data["percentChange"]+"/n"
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=response_message))
+
     elif(event.message.text[0]=="#"):
         line_bot_api.reply_message(
             event.reply_token,
