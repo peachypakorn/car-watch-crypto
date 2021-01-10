@@ -13,6 +13,7 @@ from linebot.models import (
 )
 
 import requests
+import json
 
 
 @app.route('/getmsg/', methods=['GET'])
@@ -86,11 +87,12 @@ def callback():
 def handle_message(event):
     if (event.message.text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
+        response_body = json.loads(response.text)
         interested = ["THB_BTC","THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
-        response_message = "Current Price :D"
+        response_message = "Current Price :D\n"
         for i in interested:
-            coin_data = response.json()[i]
-            response_message = response_message +"/n"+i+" lastest price:"+ coin_data["last"]+" change:"+coin_data["percentChange"]+"/n"
+            coin_data = response_body[i]
+            response_message = response_message +"\n"+i+" lastest price:"+ str(coin_data["last"])+" change:"+str(coin_data["percentChange"])+"%\n"
 
         line_bot_api.reply_message(
             event.reply_token,
