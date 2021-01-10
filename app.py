@@ -85,8 +85,8 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if (event.message.text=="#price"):
-        response = requests.get("http://api.open-notify.org/this-api-doesnt-exist")
-        interested = ['THB_BTC',"THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
+        response = requests.get("https://api.bitkub.com/api/market/ticker")
+        interested = ["THB_BTC","THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
         response_message = "Current Price :D"
         for i in interested:
             coin_data = response.json()[i]
