@@ -92,7 +92,7 @@ def handle_message(event):
         response_message = "Current Price :D\n"
         for i in interested:
             coin_data = response_body[i]
-            response_message = response_message +"\n"+i+" lastest price:"+ str(coin_data["last"])+" change:"+str(coin_data["percentChange"])+"%\n"
+            response_message = response_message +"\n"+i+" latest price:"+ str(coin_data["last"])+" change:"+str(coin_data["percentChange"])+"%\n"
 
         line_bot_api.reply_message(
             event.reply_token,
