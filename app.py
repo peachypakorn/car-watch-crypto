@@ -12,6 +12,8 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+import requests
+
 
 @app.route('/getmsg/', methods=['GET'])
 def respond():
@@ -82,7 +84,14 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if(event.message.text[0]=="#"):
+    if (event.message.text[0]=="#price"):
+        response = requests.get("http://api.open-notify.org/this-api-doesnt-exist")
+        interested = ['THB_BTC',"THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
+        response = "Current Price :D"
+        for i in interested:
+            coin_data = response.json()[i]
+            response = response +"/n"+i+" lastest price:"+ coin_data["last"]+" change:"+coin_data["percentChange"]
+    elif(event.message.text[0]=="#"):
         line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text="อย่าพึงทัก ยังทำไม่เสร็จ"))
@@ -93,3 +102,8 @@ def handle_message(event):
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
     app.run(threaded=True, port=5000)
+
+
+    # {"id":1,"last":1229999,"lowestAsk":1229999,"highestBid":1225999,"percentChange":-1.44,"baseVolume":657.29056115,
+    # "quoteVolume":811822485.63,"isFrozen":0,"high24hr":1260000,"low24hr":1183005,"change":-18000.99,"prevClose":1229999,
+    # "prevOpen":1247999.99}
