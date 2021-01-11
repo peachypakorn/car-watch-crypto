@@ -18,13 +18,13 @@ def get_config_obj(event,redis_obj):
     print(event)
     config_obj = {}
     if (event.source.type=="group"):
-        if redis_obj.exists(event.source.groupId):
-            config_obj = ast.literal_eval(redis_obj.get(event.source.groupId.decode("utf-8")).decode("utf-8"))
+        if redis_obj.exists(event.source["groupId"]):
+            config_obj = ast.literal_eval(redis_obj.get(event.source["groupId"]).decode("utf-8"))
         config_obj["id"] = event.source.groupId
         
     elif(event.source.type=="user"):
-        if redis_obj.exists(event.source.userId):
-            config_obj = ast.literal_eval(redis_obj.get(event.source.userId.decode("utf-8")).decode("utf-8)"))
+        if redis_obj.exists(event.source["userId"]):
+            config_obj = ast.literal_eval(redis_obj.get(event.source["userId"]).decode("utf-8)"))
         config_obj["id"] = event.source.userId
 
     return config_obj
@@ -39,7 +39,6 @@ def response_line(line_obj,event,response_message):
             TextSendMessage(text=response_message))
 
 def get_message_from_line(event,line_obj,redis_obj,input_text):
-    config_obj = get_config_obj(event,redis_obj)
 
     if (input_text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
@@ -53,6 +52,8 @@ def get_message_from_line(event,line_obj,redis_obj,input_text):
         
 
     elif "#base" in input_text:
+        config_obj = get_config_obj(event,redis_obj)
+
         if len(input_text) < 10:
             response_line(line_obj,event,"Syntax Error please try again")
         else:
@@ -63,12 +64,16 @@ def get_message_from_line(event,line_obj,redis_obj,input_text):
         # redis_obj.set(input_text[6:8],)        
 
     elif "#clearbase" in input_text:
+        config_obj = get_config_obj(event,redis_obj)
+
         config_obj["base"] = []
         save_config_obj(config_obj,redis_obj)
         response_line(line_obj,event,"Base cleared")
 
 
     elif "#showbase" in input_text:
+        config_obj = get_config_obj(event,redis_obj)
+
         response_line(line_obj,event,str(config_obj["base"]))
 
 
