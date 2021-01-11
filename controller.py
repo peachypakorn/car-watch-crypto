@@ -12,17 +12,18 @@ import requests
 import json
 import os
 import redis
+import ast
 
 def get_config_obj(event,redis_obj):
     config_obj = {}
     if (event.source.type=="group"):
         if redis_obj.exists(event.source.groupId):
-            config_obj = json.loads(redis_obj.get(event.source.groupId))
+            config_obj = ast.literal_eval(redis_obj.get(event.source.groupId).decode("utf-8"))
         config_obj["id"] = event.source.groupId
         
     elif(event.source.type=="user"):
         if redis_obj.exists(event.source.userId):
-            config_obj = json.loads(redis_obj.get(event.source.userId))
+            config_obj = ast.literal_eval(redis_obj.get(event.source.userId).decode("utf-8)"))
         config_obj["id"] = event.source.userId
 
     return config_obj
@@ -37,7 +38,7 @@ def response_line(line_obj,event,response_message):
             TextSendMessage(text=response_message))
 
 def get_message_from_line(event,line_obj,redis_obj,input_text):
-    # config_obj = get_config_obj(event,redis_obj)
+    config_obj = get_config_obj(event,redis_obj)
     if (input_text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
         response_body = json.loads(response.text)
