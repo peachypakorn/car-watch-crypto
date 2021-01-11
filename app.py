@@ -66,8 +66,8 @@ def index():
 line_bot_api = LineBotApi("Xre38PQd9ZBFQiaC7oQ92TuafYlNFCVJDQ/t93iDpkjeHDW0CjnJqGf7CKQOv3dfrDnfTd9YlRrrCPAMac2zK6DBee/gUYTcN/wdWR66Q1uIFwHxiUKrYs1KxcU2jNMGqKLwu42gQ/R5zzeoF1DnfQdB04t89/1O/w1cDnyilFU=")
 handler = WebhookHandler('8f92c499e40a9710beeaba30af98babd')
 redis_obj = redis.Redis(host='redis-18376.c3.eu-west-1-2.ec2.cloud.redislabs.com',port=18376, db=0,password='06x6jL6C54f5yYR4ctQEwYLROEn6V1vf')
-redis_obj.set('peachy','pakorn')
-print(redis_obj.get('peachy'))
+# redis_obj.set('peachy','pakorn')
+# print(redis_obj.get('peachy'))
 
 @app.route("/callback", methods=['POST'])
 def callback():

@@ -13,7 +13,27 @@ import json
 import os
 import redis
 
+def get_config_obj(event,redis_obj):
+    if (event.source.type=="group"):
+        config_obj = json.loads(redis_obj.get(event.source.groupId))
+        config_obj["id"] = event.source.groupId
+        return config_obj
+    elif(event.source.type=="user"):
+        config_obj = json.loads(redis_obj.get(event.source.userId))
+        config_obj["id"] = event.source.userId
+        return config_obj
+
+def save_config_obj(config_obj,redis_obj):
+    redis_obj.set(config_obj[id],str(config_obj))
+
+def response_line(line_obj,event,response_message):
+    line_obj.reply_message(
+            event.reply_token,
+            TextSendMessage(text=response_message))
+
 def get_message_from_line(event,line_obj,redis_obj,input_text):
+    config_obj = get_config_obj(event,redis_obj)
+
     if (input_text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
         response_body = json.loads(response.text)
@@ -22,10 +42,28 @@ def get_message_from_line(event,line_obj,redis_obj,input_text):
         for i in interested:
             coin_data = response_body[i]
             response_message = response_message +"\n"+i+" latest price:"+ str(coin_data["last"])+" change:"+str(coin_data["percentChange"])+"%\n"
+        response_line(line_obj,event,response_message)
+        
 
-        line_obj.reply_message(
-            event.reply_token,
-            TextSendMessage(text=response_message))
+    elif "#base" in input_text:
+        if len(input_text) < 10:
+            response_line(line_obj,event,"Syntax Error please try again")
+        else:
+            config_obj["base"][input_text[6:8]] = input_text[10:]
+            save_config_obj(config_obj,redis_obj)
+            response_line(line_obj,event,"Base added" + input_text[6:])
+
+        # redis_obj.set(input_text[6:8],)        
+
+    elif "#clearbase" in input_text:
+        config_obj["base"] = []
+        save_config_obj(config_obj,redis_obj)
+        response_line(line_obj,event,"Base cleared")
+
+
+    elif "#showbase" in input_text:
+        response_line(line_obj,event,str(config_obj["base"]))
+
 
     elif(event.message.text[0]=="#"):
         line_obj.reply_message(
