@@ -14,6 +14,9 @@ from linebot.models import (
 
 import requests
 import json
+import os
+import redis
+import controller
 
 
 @app.route('/getmsg/', methods=['GET'])
@@ -62,7 +65,9 @@ def index():
 
 line_bot_api = LineBotApi("Xre38PQd9ZBFQiaC7oQ92TuafYlNFCVJDQ/t93iDpkjeHDW0CjnJqGf7CKQOv3dfrDnfTd9YlRrrCPAMac2zK6DBee/gUYTcN/wdWR66Q1uIFwHxiUKrYs1KxcU2jNMGqKLwu42gQ/R5zzeoF1DnfQdB04t89/1O/w1cDnyilFU=")
 handler = WebhookHandler('8f92c499e40a9710beeaba30af98babd')
-
+redis_obj = redis.Redis(host='redis-18376.c3.eu-west-1-2.ec2.cloud.redislabs.com',port=18376, db=0,password='06x6jL6C54f5yYR4ctQEwYLROEn6V1vf')
+redis_obj.set('peachy','pakorn')
+print(redis_obj.get('peachy'))
 
 @app.route("/callback", methods=['POST'])
 def callback():
@@ -85,23 +90,8 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    if (event.message.text=="#price"):
-        response = requests.get("https://api.bitkub.com/api/market/ticker")
-        response_body = json.loads(response.text)
-        interested = ["THB_BTC","THB_ETH","THB_XRP","THB_BCH","THB_OMG"]
-        response_message = "Current Price :D\n"
-        for i in interested:
-            coin_data = response_body[i]
-            response_message = response_message +"\n"+i+" latest price:"+ str(coin_data["last"])+" change:"+str(coin_data["percentChange"])+"%\n"
-
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text=response_message))
-
-    elif(event.message.text[0]=="#"):
-        line_bot_api.reply_message(
-            event.reply_token,
-            TextSendMessage(text="อย่าพึงทัก ยังทำไม่เสร็จ"))
+    controller.get_message_from_line(event,line_bot_api,redis_obj,event.message.text)
+    
         # line_bot_api.reply_message(
         #     event.reply_token,
         #     TextSendMessage(text=event.message.text))
