@@ -15,6 +15,7 @@ import redis
 import ast
 
 def get_config_obj(event,redis_obj):
+    print(event)
     config_obj = {}
     if (event.source.type=="group"):
         if redis_obj.exists(event.source.groupId):
