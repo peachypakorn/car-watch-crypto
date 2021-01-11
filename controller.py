@@ -40,8 +40,8 @@ def response_line(line_obj,event,response_message):
 def get_message_from_line(event,line_obj,redis_obj,input_text):
     # config_obj = get_config_obj(event,redis_obj)
     response_line(line_obj,event,input_text)
-    response_line(line_obj,event,event.sourve.type)
-    response_line(line_obj,event,event.sourve.userId)
+    response_line(line_obj,event,event.source.type)
+    response_line(line_obj,event,event.source.userId)
     response_line(line_obj,event,redis_obj.exists(event.source.userId))
     config_obj = {}
     config_obj["id"] = event.source.userId
