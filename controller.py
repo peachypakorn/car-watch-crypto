@@ -37,7 +37,7 @@ def response_line(line_obj,event,response_message):
             TextSendMessage(text=response_message))
 
 def get_message_from_line(event,line_obj,redis_obj,input_text):
-    config_obj = get_config_obj(event,redis_obj)
+    # config_obj = get_config_obj(event,redis_obj)
     if (input_text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
         response_body = json.loads(response.text)
