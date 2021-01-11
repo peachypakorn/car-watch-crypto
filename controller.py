@@ -41,7 +41,7 @@ def get_message_from_line(event,line_obj,redis_obj,input_text):
     # config_obj = get_config_obj(event,redis_obj)
     config_obj = {}
     config_obj["id"] = event.source.userId
-    response_line(line_obj,event,input_text +"  "+event.source.type+" "+event.source.userId+" "+str(redis_obj.exists(event.source.userId))+" "+str(config_obj) )
+    response_line(line_obj,event,str(event) )
 
 
 
