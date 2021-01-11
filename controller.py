@@ -26,7 +26,7 @@ def get_config_obj(event,redis_obj):
 
     return config_obj
 
-    
+
 def save_config_obj(config_obj,redis_obj):
     redis_obj.set(config_obj[id],str(config_obj))
 
@@ -36,9 +36,7 @@ def response_line(line_obj,event,response_message):
             TextSendMessage(text=response_message))
 
 def get_message_from_line(event,line_obj,redis_obj,input_text):
-    print("hereeee")
-    config_obj = get_config_obj(event,redis_obj)
-    print("config not error")
+    # config_obj = get_config_obj(event,redis_obj)
     if (input_text=="#price"):
         response = requests.get("https://api.bitkub.com/api/market/ticker")
         response_body = json.loads(response.text)
