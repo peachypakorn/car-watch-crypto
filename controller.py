@@ -15,14 +15,18 @@ import redis
 
 def get_config_obj(event,redis_obj):
     if (event.source.type=="group"):
-        config_obj = json.loads(redis_obj.get(event.source.groupId))
+        if redis_obj.exists(event.source.groupId):
+            config_obj = json.loads(redis_obj.get(event.source.groupId))
         config_obj["id"] = event.source.groupId
-        return config_obj
+        
     elif(event.source.type=="user"):
-        config_obj = json.loads(redis_obj.get(event.source.userId))
+        if redis_obj.exists(event.source.userId):
+            config_obj = json.loads(redis_obj.get(event.source.userId))
         config_obj["id"] = event.source.userId
-        return config_obj
 
+    return config_obj
+
+    
 def save_config_obj(config_obj,redis_obj):
     redis_obj.set(config_obj[id],str(config_obj))
 
