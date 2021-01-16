@@ -20,12 +20,12 @@ def get_config_obj(event,redis_obj):
     if (event.source.type=="group"):
         if redis_obj.exists(event.source.group_id):
             config_obj = ast.literal_eval(redis_obj.get(event.source.group_id).decode("utf-8"))
-        config_obj["id"] = event.source.groupId
+        config_obj["id"] = event.source.group_id
         
     elif(event.source.type=="user"):
         if redis_obj.exists(event.source.user_id):
             config_obj = ast.literal_eval(redis_obj.get(event.source.user_id).decode("utf-8)"))
-        config_obj["id"] = event.source.userId
+        config_obj["id"] = event.source.user_id
 
     return config_obj
 
