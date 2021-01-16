@@ -18,13 +18,13 @@ def get_config_obj(event,redis_obj):
     print(event)
     config_obj = {}
     if (event.source.type=="group"):
-        if redis_obj.exists(event.source.groupId):
-            config_obj = ast.literal_eval(redis_obj.get(event.source.groupId).decode("utf-8"))
+        if redis_obj.exists(event.source.group_id):
+            config_obj = ast.literal_eval(redis_obj.get(event.source.group_id).decode("utf-8"))
         config_obj["id"] = event.source.groupId
         
     elif(event.source.type=="user"):
-        if redis_obj.exists(event.source.userId):
-            config_obj = ast.literal_eval(redis_obj.get(event.source.userId).decode("utf-8)"))
+        if redis_obj.exists(event.source.user_id):
+            config_obj = ast.literal_eval(redis_obj.get(event.source.user_id).decode("utf-8)"))
         config_obj["id"] = event.source.userId
 
     return config_obj
